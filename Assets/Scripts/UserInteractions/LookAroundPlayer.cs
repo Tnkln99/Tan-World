@@ -1,21 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LookAroundPlayer : MonoBehaviour
+namespace UserInteractions
 {
-    public float rotationSpeed = 10f;
-    //Drag the camera object here
-    public Camera cam;  
-
-    void OnMouseDrag()
+    public class LookAroundPlayer : MonoBehaviour
     {
-        float rotX = Input.GetAxis("Mouse X") * rotationSpeed;
-        float rotY = Input.GetAxis("Mouse Y") * rotationSpeed;
+        public float rotationSpeed = 10f;
+        //Drag the camera object here
+        public Camera cam;
 
-        Vector3 right = Vector3.Cross(cam.transform.up, transform.position - cam.transform.position);
-        Vector3 up = Vector3.Cross(transform.position - cam.transform.position, right);
-        transform.rotation = Quaternion.AngleAxis(-rotX, up) * transform.rotation;
-        transform.rotation = Quaternion.AngleAxis(rotY, right) * transform.rotation;
+        private void OnMouseDrag()
+        {
+            var rotX = Input.GetAxis("Mouse X") * rotationSpeed;
+            var rotY = Input.GetAxis("Mouse Y") * rotationSpeed;
+
+            var camTransform = cam.transform;
+            var transform1 = transform;
+            var rotation = transform1.rotation;
+            var position = transform1.position;
+            var camTransformPosition = camTransform.position;
+            var right = Vector3.Cross(camTransform.up, position - camTransformPosition);
+            var up = Vector3.Cross(position - camTransformPosition, right);
+            rotation = Quaternion.AngleAxis(-rotX, up) * rotation;
+            rotation = Quaternion.AngleAxis(rotY, right) * rotation;
+            transform1.rotation = rotation;
+        }
     }
 }

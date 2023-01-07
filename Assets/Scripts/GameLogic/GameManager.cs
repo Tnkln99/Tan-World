@@ -1,64 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
+using System;
+using Gravity;
+using Ui;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
-public class GameManager : MonoBehaviour
+namespace GameLogic
 {
-    public GameObject herbivore;
-
-    public GameObject planet;
-
-    public GameObject plant;
-
-    public UiManager canvas;
-
-    private int _countHerbivore = 0;
-    private int _countPlants = 0;
-    
-
-    // Update is called once per frame
-    void Update()
+    public class GameManager : MonoBehaviour
     {
-        SpawnElement();
-    }
+        private static GameManager _instance;
+        
+        public GameObject herbivore;
 
-    void SpawnElement()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitData;
-        if (planet.GetComponent<SphereCollider>().Raycast(ray, out hitData, 1000))
+        public GameObject planet;
+
+        public GameObject plant;
+
+        public UiManager canvas;
+
+        private int _countHerbivore;
+        private int _countPlants;
+
+        public static GameManager Instance(out bool isNull)
         {
-            // Spawns Herbivore
-            if (Input.GetMouseButtonDown(1))
+            if (_instance == null)
             {
-                _countHerbivore++;
-                GameObject newHerb = Instantiate(herbivore, planet.transform, false);
-                newHerb.GetComponent<GravityBody>().planet = planet.GetComponent<GravityAttracter>();
-                newHerb.transform.position = hitData.point;
-                newHerb.transform.localScale = new Vector3(0.008f, 0.008f, 0.008f);
-                canvas.UpdateHerbivoreCount(_countHerbivore);
+                isNull = true;
+                return null;
             }
-            // Spawns Plant
-            if (Input.GetMouseButtonDown(2))
+            isNull = false;
+            return _instance;
+        }
+
+        private void Awake()
+        {
+            _instance = this;
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+            SpawnElement();
+        }
+
+        private void SpawnElement()
+        {
+            if (Camera.main == null)
             {
-                _countPlants++;
-                GameObject newPlant = Instantiate(plant, planet.transform, false);
-                newPlant.GetComponent<GravityBody>().planet = planet.GetComponent<GravityAttracter>();
-                newPlant.GetComponent<Plant>().gameManager = this;
-                newPlant.transform.position = hitData.point;
-                newPlant.transform.localScale = new Vector3(0.0128334f, 0.03411889f, 0.0128334f);
-                canvas.UpdatePlantCount(_countPlants);
+                return;
+            }
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (planet.GetComponent<SphereCollider>().Raycast(ray, out var hitData, 1000))
+            {
+                // Spawns Herbivore
+                if (Input.GetMouseButtonDown(1))
+                {
+                    _countHerbivore++;
+                    var newHerb = Instantiate(herbivore, null);
+                    newHerb.transform.SetParent(planet.transform, false);
+                    newHerb.GetComponent<GravityBody>().planet = planet.GetComponent<GravityAttracter>();
+                    newHerb.transform.position = hitData.point;
+                    canvas.UpdateHerbivoreCount(_countHerbivore);
+                }
+                // Spawns Plant
+                if (Input.GetMouseButtonDown(2))
+                {
+                    _countPlants++;
+                    var newPlant = Instantiate(plant, null);
+                    newPlant.transform.SetParent(planet.transform, false);
+                    newPlant.GetComponent<GravityBody>().planet = planet.GetComponent<GravityAttracter>();
+                    newPlant.GetComponent<Plant>().gameManager = this;
+                    newPlant.transform.position = hitData.point;
+                    canvas.UpdatePlantCount(_countPlants);
+                }
             }
         }
-    }
 
-    public void DeadPlant()
-    {
-        _countPlants--;
-        canvas.UpdatePlantCount(_countPlants);
+        public void DeadPlant()
+        {
+            _countPlants--;
+            canvas.UpdatePlantCount(_countPlants);
+        }
     }
 }

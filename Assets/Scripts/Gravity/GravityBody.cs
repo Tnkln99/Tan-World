@@ -1,21 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GravityBody : MonoBehaviour
+namespace Gravity
 {
-    public GravityAttracter planet;
+    public class GravityBody : MonoBehaviour
+    {
+        public GravityAttracter planet;
 
-    private Transform _myTransform;
-    void Start()
-    {
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-        GetComponent<Rigidbody>().useGravity = false;
-        _myTransform = transform;
-    }
-    
-    void Update()
-    {
-        planet.Attract(_myTransform);
+        private Transform _myTransform;
+
+        private void Start()
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            GetComponent<Rigidbody>().useGravity = false;
+            _myTransform = transform;
+        }
+
+        private void Update()
+        {
+            planet.Attract(_myTransform);
+        }
     }
 }
