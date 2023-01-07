@@ -4,7 +4,7 @@ namespace Gravity
 {
     public class GravityBody : MonoBehaviour
     {
-        public GravityAttracter planet;
+        public GravityAttracter Planet;
 
         private Transform _myTransform;
 
@@ -17,7 +17,7 @@ namespace Gravity
 
         private void Update()
         {
-            planet.Attract(_myTransform);
+            Planet.Attract(_myTransform);
         }
     }
 }

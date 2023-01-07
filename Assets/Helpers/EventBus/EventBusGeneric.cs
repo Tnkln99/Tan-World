@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Paxie
+namespace Helpers.EventBus
 {
     using System.Collections.Generic;
 
@@ -14,13 +14,13 @@ namespace Paxie
 
     public static class EventBus<T> where T : struct, IEvent
     {
-        private static IEventReceiver<T>[] buffer;
-        private static HashSet<IEventReceiver<T>> hash;
+        private static IEventReceiver<T>[] _buffer;
+        private static HashSet<IEventReceiver<T>> _hash;
 
         static EventBus()
         {
-            hash = new HashSet<IEventReceiver<T>>();
-            buffer = Array.Empty<IEventReceiver<T>>();
+            _hash = new HashSet<IEventReceiver<T>>();
+            _buffer = Array.Empty<IEventReceiver<T>>();
         }
 
         private static int GetBlockSize()
@@ -30,14 +30,14 @@ namespace Paxie
 
         private static void FixNull()
         {
-            if (hash == null)
+            if (_hash == null)
             {
-                hash = new HashSet<IEventReceiver<T>>();
+                _hash = new HashSet<IEventReceiver<T>>();
             }
 
-            if (buffer == null)
+            if (_buffer == null)
             {
-                buffer = Array.Empty<IEventReceiver<T>>();
+                _buffer = Array.Empty<IEventReceiver<T>>();
             }
         }
 
@@ -48,13 +48,13 @@ namespace Paxie
                 return;
             }
             FixNull();
-            hash.Add(handler as IEventReceiver<T>);
-            if(buffer.Length < hash.Count)
+            _hash.Add(handler as IEventReceiver<T>);
+            if(_buffer.Length < _hash.Count)
             {
-                buffer = new IEventReceiver<T>[hash.Count + GetBlockSize()];
+                _buffer = new IEventReceiver<T>[_hash.Count + GetBlockSize()];
             }
 
-            hash.CopyTo(buffer);
+            _hash.CopyTo(_buffer);
         }
 
         public static void UnRegister(IEventReceiverBase handler)
@@ -64,20 +64,20 @@ namespace Paxie
                 return;
             }
             FixNull();
-            hash.Remove(handler as IEventReceiver<T>);
-            hash.CopyTo(buffer);
+            _hash.Remove(handler as IEventReceiver<T>);
+            _hash.CopyTo(_buffer);
         }
 
         public static void Raise(T e)
         {
-            if (hash == null)
+            if (_hash == null)
             {
                 return;
             }
 
-            for (var i = 0; i < hash.Count; i++)
+            for (var i = 0; i < _hash.Count; i++)
             {
-                var bufferItem = buffer[i];
+                var bufferItem = _buffer[i];
                 if (bufferItem != null)
                 {
                     bufferItem.OnEvent(e);
@@ -93,7 +93,7 @@ namespace Paxie
 
         public static void Clear()
         {
-            hash.Clear();
+            _hash.Clear();
         }
 
     }

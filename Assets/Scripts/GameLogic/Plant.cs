@@ -6,8 +6,6 @@ namespace GameLogic
     {
         private int _life = 5;
 
-        public GameManager gameManager;
-
         public void DecreaseLife()
         {
             if (_life <= 0)
@@ -17,8 +15,12 @@ namespace GameLogic
             _life--;
             if (_life <= 0)
             {
-                gameManager.DeadPlant();
-                Destroy(gameObject);
+                var gameManager = GameManager.Instance(out var isNull);
+                if (isNull)
+                {
+                    return;
+                }
+                gameManager.ObjectSpawner.DestroyPlant(gameObject);
             }
         }
     }

@@ -4,7 +4,7 @@ namespace GameLogic
 {
     public class LivingBody : MonoBehaviour
     {
-        public float speed = 10;
+        public float Speed = 10;
     
         private Rigidbody _rb;
         private AiBehavior _behavior;
@@ -28,7 +28,7 @@ namespace GameLogic
 
         private void FixedUpdate()
         {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (speed * Time.deltaTime));
+            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (Speed * Time.deltaTime));
         }
     }
 }

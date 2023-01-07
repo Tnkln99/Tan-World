@@ -1,4 +1,4 @@
-namespace Paxie
+namespace Helpers.EventBus
 {
 
     using System;
@@ -8,8 +8,8 @@ namespace Paxie
 
     public static class EventBus
     {
-        private static Dictionary<Type, ClassMap> class_register_map;
-        private static Dictionary<Type, Action<IEvent>> cached_raise;
+        private static Dictionary<Type, ClassMap> _classRegisterMap;
+        private static Dictionary<Type, Action<IEvent>> _cachedRaise;
 
         private class BusMap
         {
@@ -25,10 +25,10 @@ namespace Paxie
       
         static EventBus()
         {
-            class_register_map = new Dictionary<Type, ClassMap>();
-            cached_raise = new Dictionary<Type, Action<IEvent>>();
+            _classRegisterMap = new Dictionary<Type, ClassMap>();
+            _cachedRaise = new Dictionary<Type, Action<IEvent>>();
             
-            var bus_register_map = new Dictionary<Type, BusMap>();
+            var busRegisterMap = new Dictionary<Type, BusMap>();
 
             var delegateType = typeof(Action<>);
             var delegategenericregister = delegateType.MakeGenericType(typeof(IEventReceiverBase));
@@ -50,10 +50,10 @@ namespace Paxie
                         unregister = Delegate.CreateDelegate(delegategenericregister, genMyClass.GetMethod("UnRegister")) as Action<IEventReceiverBase>
                     };
 
-                    bus_register_map.Add(t, busmap);
+                    busRegisterMap.Add(t, busmap);
 
                     var method = genMyClass.GetMethod("RaiseAsInterface");
-                    cached_raise.Add(t, (Action<IEvent>)Delegate.CreateDelegate(delegategenericraise, method));
+                    _cachedRaise.Add(t, (Action<IEvent>)Delegate.CreateDelegate(delegategenericraise, method));
                 }
             }
 
@@ -71,10 +71,10 @@ namespace Paxie
                     for (var i = 0; i < interfaces.Length; i++)
                     {
                         var arg = interfaces[i].GetGenericArguments()[0];
-                        map.buses[i] = bus_register_map[arg];
+                        map.buses[i] = busRegisterMap[arg];
                     }
 
-                    class_register_map.Add(t, map);
+                    _classRegisterMap.Add(t, map);
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace Paxie
         public static void Register(IEventReceiverBase target)
         {
             var t = target.GetType();
-            var map = class_register_map[t];
+            var map = _classRegisterMap[t];
 
             foreach (var busmap in map.buses)
             {
@@ -93,7 +93,7 @@ namespace Paxie
         public static void UnRegister(IEventReceiverBase target)
         {
             var t = target.GetType();
-            var map = class_register_map[t];
+            var map = _classRegisterMap[t];
 
             foreach (var busmap in map.buses)
             {
@@ -103,7 +103,7 @@ namespace Paxie
 
         public static void Raise(IEvent ev)
         {
-            cached_raise[ev.GetType()](ev);
+            _cachedRaise[ev.GetType()](ev);
         }
 
     }

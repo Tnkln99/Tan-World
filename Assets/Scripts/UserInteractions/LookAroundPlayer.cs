@@ -4,16 +4,16 @@ namespace UserInteractions
 {
     public class LookAroundPlayer : MonoBehaviour
     {
-        public float rotationSpeed = 10f;
+        public float RotationSpeed = 10f;
         //Drag the camera object here
-        public Camera cam;
+        public Camera Cam;
 
         private void OnMouseDrag()
         {
-            var rotX = Input.GetAxis("Mouse X") * rotationSpeed;
-            var rotY = Input.GetAxis("Mouse Y") * rotationSpeed;
+            var rotX = Input.GetAxis("Mouse X") * RotationSpeed;
+            var rotY = Input.GetAxis("Mouse Y") * RotationSpeed;
 
-            var camTransform = cam.transform;
+            var camTransform = Cam.transform;
             var transform1 = transform;
             var rotation = transform1.rotation;
             var position = transform1.position;

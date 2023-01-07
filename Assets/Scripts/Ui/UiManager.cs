@@ -5,17 +5,17 @@ namespace Ui
 {
     public class UiManager : MonoBehaviour
     {
-        public TextMeshProUGUI herbivoreCount;
-        public TextMeshProUGUI plantCount;
+        [SerializeField] private TextMeshProUGUI HerbivoreCount;
+        [SerializeField] private TextMeshProUGUI PlantCount;
 
         public void UpdateHerbivoreCount(int count)
         {
-            herbivoreCount.text = "Herbivore Count: " + count.ToString();
+            HerbivoreCount.text = "Herbivore Count: " + count;
         }
     
         public void UpdatePlantCount(int count)
         {
-            plantCount.text = "Plant Count: " + count.ToString();
+            PlantCount.text = "Plant Count: " + count;
         }
     }
 }

@@ -290,7 +290,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4999
+  m_Radius: 0.48
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &400338683
 MeshRenderer:
@@ -369,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1bbfe4cbfc3204188317eb24dea613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: -10
+  Gravity: -10
 --- !u!114 &400338687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,8 +382,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d582a14f9824a1845a1bc95dfeaf9eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 2
-  cam: {fileID: 963194227}
+  RotationSpeed: 10
+  Cam: {fileID: 963194227}
 --- !u!1 &601905500
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,7 +543,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &736559247
 GameObject:
@@ -559,7 +559,7 @@ GameObject:
   - component: {fileID: 736559248}
   - component: {fileID: 736559252}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -641,7 +641,7 @@ RectTransform:
   - {fileID: 1391529355}
   - {fileID: 109007163}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -660,8 +660,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b083e8f29b6120f4fb8f036625903678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  herbivoreCount: {fileID: 1391529356}
-  plantCount: {fileID: 109007164}
+  HerbivoreCount: {fileID: 1391529356}
+  PlantCount: {fileID: 109007164}
 --- !u!1 &759130580
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 759130582}
   - component: {fileID: 759130581}
+  - component: {fileID: 759130583}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -691,10 +692,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8388eec15117f248806e55aca3e2bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  herbivore: {fileID: 4230211180416291393, guid: b1422bd61d17958499c95f32e10b4b2b, type: 3}
-  planet: {fileID: 400338681}
-  plant: {fileID: 3470077710870619712, guid: 3ed2080e143b2524bbf41fc588a41622, type: 3}
-  canvas: {fileID: 736559252}
+  UiManager: {fileID: 736559252}
+  ObjectSpawner: {fileID: 1753263121}
 --- !u!4 &759130582
 Transform:
   m_ObjectHideFlags: 0
@@ -710,6 +709,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &759130583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759130580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adee3cd660524b069b859333ae606305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseParentTransforms: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,3 +941,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391529354}
   m_CullTransparentMesh: 1
+--- !u!1 &1753263119
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753263122}
+  - component: {fileID: 1753263121}
+  - component: {fileID: 1753263120}
+  m_Layer: 0
+  m_Name: ObjectSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1753263120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753263119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adee3cd660524b069b859333ae606305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseParentTransforms: 0
+--- !u!114 &1753263121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753263119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18e0f7f30ea14739ae6ac97f1931c705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectPooler: {fileID: 1753263120}
+  Herbivore: {fileID: 4230211180416291393, guid: b1422bd61d17958499c95f32e10b4b2b, type: 3}
+  Planet: {fileID: 400338681}
+  Plant: {fileID: 3470077710870619712, guid: 3ed2080e143b2524bbf41fc588a41622, type: 3}
+--- !u!4 &1753263122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753263119}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.61206, y: -15.120277, z: -9.025459}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
