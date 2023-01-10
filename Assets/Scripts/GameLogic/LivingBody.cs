@@ -7,26 +7,21 @@ namespace GameLogic
         public float Speed = 10;
     
         private Rigidbody _rb;
-        private AiBehavior _behavior;
-    
-        private Vector3 _moveDir;
 
-        private void Start()
+        protected Vector3 _moveDir;
+
+        protected virtual void Start()
         {
             _rb = GetComponent<Rigidbody>();
-            if (CompareTag("Herbivore"))
-            {
-                _behavior = GetComponent<AiHerbivore>();
-            }
-        
+
         }
 
-        private void Update()
+        protected virtual void Update()
         {
-            _behavior.ChangeBehavior(ref _moveDir);
+            
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (Speed * Time.deltaTime));
         }
