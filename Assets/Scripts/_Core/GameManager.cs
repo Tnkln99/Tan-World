@@ -6,7 +6,7 @@ namespace _Core
     public class GameManager : MonoBehaviour
     {
         private static GameManager _instance;
-
+        public Camera MainCamera;
         public UiManager UiManager;
         public ObjectSpawner ObjectSpawner;
 

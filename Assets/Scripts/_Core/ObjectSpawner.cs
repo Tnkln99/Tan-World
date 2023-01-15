@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gravity;
 using Helpers.ObjectPool;
 using Models.Enums;
-using Ui;
 using UnityEngine;
 
 
@@ -21,13 +21,6 @@ namespace _Core
 
 
         private CreatureType _selectedCreature = CreatureType.Empty;
-
-
-        // Update is called once per frame
-        private void Update()
-        {
-            SpawnElement();
-        }
 
         private void Awake()
         {
@@ -59,56 +52,48 @@ namespace _Core
             ObjectPooler.Initialize(pooledTypes);
         }
 
-        private void SpawnElement()
+        public void SpawnElement()
         {
-            if (Camera.main == null)
+            var gameManager = GameManager.Instance(out var isNull);
+            if (isNull || gameManager.MainCamera == null)
             {
                 return;
             }
-
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
+            var ray = gameManager.MainCamera.ScreenPointToRay(Input.mousePosition);
             if (Planet.GetComponent<SphereCollider>().Raycast(ray, out var hitData, 1000))
             {
-                var gameManager = GameManager.Instance(out var isNull);
-                if (isNull)
+                // Spawns Herbivore
+                if (_selectedCreature == CreatureType.Herbivore)
                 {
-                    return;
+                    _countHerbivore++;
+                    var newHerb = ObjectPooler.Generate(Herbivore);
+                    newHerb.transform.SetParent(Planet.transform, false);
+                    newHerb.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
+                    newHerb.transform.position = hitData.point;
+                    gameManager.UiManager.UpdateHerbivoreCount(_countHerbivore);
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                // Spawns Carnivore
+                if (_selectedCreature == CreatureType.Carnivore)
                 {
-                    // Spawns Herbivore
-                    if (_selectedCreature == CreatureType.Herbivore)
-                    {
-                        _countHerbivore++;
-                        var newHerb = ObjectPooler.Generate(Herbivore);
-                        newHerb.transform.SetParent(Planet.transform, false);
-                        newHerb.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
-                        newHerb.transform.position = hitData.point;
-                        gameManager.UiManager.UpdateHerbivoreCount(_countHerbivore);
-                    }
+                    _countCarnivores++;
+                    var newCarn = ObjectPooler.Generate(Carnivore);
+                    newCarn.transform.SetParent(Planet.transform, false);
+                    newCarn.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
+                    newCarn.transform.position = hitData.point;
+                    gameManager.UiManager.UpdateCarnivoreCount(_countCarnivores);
+                }
 
-                    // Spawns Carnivore
-                    if (_selectedCreature == CreatureType.Carnivore)
-                    {
-                        _countCarnivores++;
-                        var newCarn = ObjectPooler.Generate(Carnivore);
-                        newCarn.transform.SetParent(Planet.transform, false);
-                        newCarn.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
-                        newCarn.transform.position = hitData.point;
-                        gameManager.UiManager.UpdateCarnivoreCount(_countCarnivores);
-                    }
-
-                    // Spawns Plant
-                    if (_selectedCreature == CreatureType.Plant)
-                    {
-                        _countPlants++;
-                        var newPlant = ObjectPooler.Generate(Plant);
-                        newPlant.transform.SetParent(Planet.transform, false);
-                        newPlant.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
-                        newPlant.transform.position = hitData.point;
-                        gameManager.UiManager.UpdatePlantCount(_countPlants);
-                    }
+                // Spawns Plant
+                if (_selectedCreature == CreatureType.Plant)
+                {
+                    _countPlants++;
+                    var newPlant = ObjectPooler.Generate(Plant);
+                    newPlant.transform.SetParent(Planet.transform, false);
+                    newPlant.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
+                    newPlant.transform.position = hitData.point;
+                    gameManager.UiManager.UpdatePlantCount(_countPlants);
                 }
             }
         }
