@@ -10,8 +10,8 @@ namespace Helpers
 
         private enum InputState
         {
-            Blocked,
-            Active
+            Active,
+            Blocked
         }
         
         public static HelperManager Instance(out bool isNull)
@@ -23,6 +23,12 @@ namespace Helpers
             }
             isNull = false;
             return _instance;
+        }
+
+        public override void Awake()
+        {
+            _instance = this;
+            base.Awake();
         }
 
         public bool IsInputActive()
