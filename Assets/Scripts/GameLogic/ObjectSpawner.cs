@@ -9,11 +9,13 @@ namespace GameLogic
     {
         [SerializeField] private ObjectPooler ObjectPooler;
         [SerializeField] private GameObject Herbivore;
+        [SerializeField] private GameObject Carnivore;
         [SerializeField] private GameObject Planet;
         [SerializeField] private GameObject Plant;
         
         private int _countHerbivore;
         private int _countPlants;
+        private int _countCarnivores;
         
         // Update is called once per frame
         private void Update()
@@ -39,6 +41,14 @@ namespace GameLogic
                 Prefab = Plant,
                 SortingTag = "Plant",
                 TypeName = "Plant"
+            });
+            pooledTypes.Add(new PooledType()
+            {
+                AutoExpand = true,
+                Max = 1000,
+                Prefab = Carnivore,
+                SortingTag = "Carnivore",
+                TypeName = "Carnivore"
             });
             ObjectPooler.Initialize(pooledTypes);
         }
@@ -67,8 +77,19 @@ namespace GameLogic
                     newHerb.transform.position = hitData.point;
                     gameManager.UiManager.UpdateHerbivoreCount(_countHerbivore);
                 }
-                // Spawns Plant
+                // Spawns Carnivore
                 if (Input.GetMouseButtonDown(2))
+                {
+                    _countCarnivores++;
+                    var newCarn = ObjectPooler.Generate(Carnivore);
+                    newCarn.transform.SetParent(Planet.transform, false);
+                    newCarn.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
+                    newCarn.transform.position = hitData.point;
+                    gameManager.UiManager.UpdateCarnivoreCount(_countCarnivores);
+                }
+                // Spawns Plant
+                // TODO: idk whats GetMouseButtonDown(3) should do something obout this
+                if (Input.GetMouseButtonDown(3))
                 {
                     _countPlants++;
                     var newPlant = ObjectPooler.Generate(Plant);
@@ -90,6 +111,30 @@ namespace GameLogic
                 return;
             }
             gameManager.UiManager.UpdatePlantCount(_countPlants);
+        }
+        
+        public void DestroyHerbivore(GameObject obj)
+        {
+            _countHerbivore--;
+            ObjectPooler.Destroy(obj);
+            var gameManager = GameManager.Instance(out var isNull);
+            if (isNull)
+            {
+                return;
+            }
+            gameManager.UiManager.UpdateHerbivoreCount(_countHerbivore);
+        }
+        
+        public void DestroyCarnivore(GameObject obj)
+        {
+            _countCarnivores--;
+            ObjectPooler.Destroy(obj);
+            var gameManager = GameManager.Instance(out var isNull);
+            if (isNull)
+            {
+                return;
+            }
+            gameManager.UiManager.UpdateCarnivoreCount(_countCarnivores);
         }
     }
 }

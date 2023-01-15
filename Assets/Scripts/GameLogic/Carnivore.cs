@@ -1,10 +1,8 @@
-using Unity.VisualScripting;
-using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
+﻿using UnityEngine;
 
 namespace GameLogic
 {
-    public class Herbivore : LivingBody
+    public class Carnivore : LivingBody
     {
         protected override void Update() 
         {
@@ -17,22 +15,14 @@ namespace GameLogic
                 {
                     return;
                 }
-                gameManager.ObjectSpawner.DestroyHerbivore(gameObject);
+                gameManager.ObjectSpawner.DestroyCarnivore(gameObject);
             }
         }
-
+        
         protected override void ChasingFood(ref Vector3 direction)
         {
             base.ChasingFood(ref direction);
-            
-            var currentTime = Time.time;
-            if (currentTime - ReturnWonderTimer > 10)
-            {
-                ReturnWonderTimer = currentTime;
-                state = State.Wondering;
-                HasAggro = false;
-            }
-            
+
             Vector3 selfPos = transform.position;
             Vector3 eatTargetPos = EatTarget.position;
             if (Vector3.Distance(selfPos, eatTargetPos) > 5.0f)
@@ -42,49 +32,37 @@ namespace GameLogic
             // this means animal reached to the distance to the plant to be able to eat it
             else
             {
-                // Todo: send a message to plant to decrease its life with event system
+                // Todo: send a message to Herbivore to decrease its life with event system
                 HungerLevel = 0;
                 direction = new Vector3(0,0,0);
             }
-
-            Debug.Log("chasing food");
-        }
-
-        protected override void RunningAway(ref Vector3 direction)
-        {
-            base.RunningAway(ref direction);
-
-            Vector3 selfPos = transform.position;
-            Vector3 runAwayTargetPos = RunAwayTarget.position;
             
-            direction = (new Vector3(selfPos.x - runAwayTargetPos.x, 0.0f, selfPos.z - runAwayTargetPos.z)).normalized;
-
-            Debug.Log("Herbivore running away");
+            Debug.Log("Carnivore chasing");
         }
-
+        
         protected override void CheckSurroundings()
         {
             base.CheckSurroundings();
             
             foreach (var unit in RangeCollider)
             {
-                if (unit.gameObject.CompareTag("Carnivore"))
+                if (HasAggro)
                 {
-                    RunAwayTarget = unit.gameObject.transform;
-                    state = State.RunningAway;
                     return;
                 }
-                
-                if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > hungerLimitToLookForFood)
+                    
+                if (unit.gameObject.CompareTag("Herbivore") /*&& HungerLevel > hungerLimitToLookForFood*/)
                 {
-                    ReturnWonderTimer = Time.time;
                     state = State.ChasingFood;
                     EatTarget = unit.gameObject.transform;
                     HasAggro = true;
+                    return;
                 }
             }
+
+            state = State.Wondering;
+            HasAggro = false;
         }
     }
+
 }
-
-

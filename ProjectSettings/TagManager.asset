@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Herbivore
   - Plant
+  - Carnivore
   layers:
   - Default
   - TransparentFX
