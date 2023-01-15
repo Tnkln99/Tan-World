@@ -9,7 +9,7 @@ namespace LivingObjects.Carnivore.GameLogic
         {
             base.Update();
 
-            if (HungerLevel > HungerLimitToDeath)
+            if (HungerLevel > LivingBodyAttributes.HungerLimitToDeath)
             {
                 var gameManager = GameManager.Instance(out var isNull);
                 if (isNull)

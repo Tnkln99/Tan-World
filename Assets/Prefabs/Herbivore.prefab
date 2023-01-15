@@ -112,10 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7199f2214bacbfd488eb1ff19e94c549, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRad: 30
-  speed: 2
-  hungerLimitToLookForFood: 20
-  hungerLimitToDeath: Infinity
+  LivingBodyAttributes: {fileID: 11400000, guid: 280b7b957d2db4cb788299fe175db8eb, type: 2}
 --- !u!54 &4230211180416291398
 Rigidbody:
   m_ObjectHideFlags: 0

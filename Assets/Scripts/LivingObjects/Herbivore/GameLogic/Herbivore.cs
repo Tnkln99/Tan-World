@@ -10,7 +10,7 @@ namespace LivingObjects.Herbivore.GameLogic
         {
             base.Update();
 
-            if (HungerLevel > HungerLimitToDeath)
+            if (HungerLevel > LivingBodyAttributes.HungerLimitToDeath)
             {
                 var gameManager = GameManager.Instance(out var isNull);
                 if (isNull)
@@ -75,7 +75,7 @@ namespace LivingObjects.Herbivore.GameLogic
                     return;
                 }
                 
-                if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > HungerLimitToLookForFood)
+                if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > LivingBodyAttributes.HungerLimitToLookForFood)
                 {
                     ReturnWanderTimer = Time.time;
                     state = State.ChasingFood;

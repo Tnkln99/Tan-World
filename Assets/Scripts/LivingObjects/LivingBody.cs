@@ -1,3 +1,4 @@
+using Models.ScriptableObjectModels;
 using UnityEngine;
 using Random=UnityEngine.Random;
 
@@ -22,14 +23,10 @@ namespace LivingObjects
         protected Transform RunAwayTarget;
         protected Collider[] RangeCollider;
         protected bool HasAggro = false;
-        protected double HungerLevel = 0;
+        protected double HungerLevel;
         protected State state = State.Wandering;
         protected float ReturnWanderTimer;
-        
-        [SerializeField] protected float Speed = 10;
-        [SerializeField] protected float DetectionRad = 10.0f;
-        [SerializeField] protected float HungerLimitToLookForFood = 0.0f;
-        [SerializeField] protected float HungerLimitToDeath = Mathf.Infinity;
+        [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
 
         protected virtual void Start()
         {
@@ -37,7 +34,7 @@ namespace LivingObjects
             _wanderingDirChangeTimer = Time.deltaTime;
             ReturnWanderTimer = Time.deltaTime;
 
-            _baseSpeed = Speed;
+            _baseSpeed = LivingBodyAttributes.Speed;
         }
 
         protected virtual void Update()
@@ -60,13 +57,13 @@ namespace LivingObjects
 
         protected virtual void FixedUpdate()
         {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (Speed * Time.deltaTime));
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(_moveDir)* Speed) ,Color.blue);
+            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (LivingBodyAttributes.Speed * Time.deltaTime));
+            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(_moveDir) * LivingBodyAttributes.Speed), Color.blue);
         }
 
         protected virtual void Wandering(ref Vector3 direction)
         {
-            Speed = _baseSpeed;
+            LivingBodyAttributes.Speed = _baseSpeed;
             var currentTime = Time.time;
             if (currentTime - _wanderingDirChangeTimer > 4)
             {
@@ -88,7 +85,7 @@ namespace LivingObjects
         // this will change the state based on surroundings
         protected virtual void CheckSurroundings()
         {
-            RangeCollider = Physics.OverlapSphere(transform.position, DetectionRad);
+            RangeCollider = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
         }
 
     }
