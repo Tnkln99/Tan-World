@@ -68,7 +68,7 @@ namespace _Core
                     return;
                 }
                 // Spawns Herbivore
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetKeyDown(KeyCode.S))
                 {
                     _countHerbivore++;
                     var newHerb = ObjectPooler.Generate(Herbivore);
@@ -78,7 +78,7 @@ namespace _Core
                     gameManager.UiManager.UpdateHerbivoreCount(_countHerbivore);
                 }
                 // Spawns Carnivore
-                if (Input.GetMouseButtonDown(2))
+                if (Input.GetKeyDown(KeyCode.D))
                 {
                     _countCarnivores++;
                     var newCarn = ObjectPooler.Generate(Carnivore);
@@ -89,7 +89,7 @@ namespace _Core
                 }
                 // Spawns Plant
                 // TODO: idk whats GetMouseButtonDown(3) should do something obout this
-                if (Input.GetMouseButtonDown(3))
+                if (Input.GetKeyDown(KeyCode.A))
                 {
                     _countPlants++;
                     var newPlant = ObjectPooler.Generate(Plant);
