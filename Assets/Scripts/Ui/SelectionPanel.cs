@@ -12,26 +12,45 @@ namespace Ui
 
         public void SelectHerbivore()
         {
-            _selectedCreature = CreatureType.Herbivore;
-            CurrentlySelected.text = "Selected: Herbivore";
+            if (_selectedCreature == CreatureType.Herbivore)
+            {
+                _selectedCreature = CreatureType.Empty;
+                CurrentlySelected.text = "Currently Selected: None";
+            }
+            else
+            {
+                _selectedCreature = CreatureType.Herbivore;
+                CurrentlySelected.text = "Currently Selected: Herbivore";
+            }
         }
 
         public void SelectCarnivore()
         {
-            _selectedCreature = CreatureType.Carnivore;
-            CurrentlySelected.text = "Selected: Carnivore";
+            if (_selectedCreature == CreatureType.Carnivore)
+            {
+                _selectedCreature = CreatureType.Empty;
+                CurrentlySelected.text = "Currently Selected: None";
+            }
+            else
+            {
+                _selectedCreature = CreatureType.Carnivore;
+                CurrentlySelected.text = "Currently Selected: Carnivore";
+            }
         }
 
-        public void SelectEmpty()
-        {
-            _selectedCreature = CreatureType.Empty;
-            CurrentlySelected.text = "Selected: None";
-        }
 
         public void SelectPlant()
         {
-            _selectedCreature = CreatureType.Plant;
-            CurrentlySelected.text = "Selected: Plant";
+            if (_selectedCreature == CreatureType.Plant)
+            {
+                _selectedCreature = CreatureType.Empty;
+                CurrentlySelected.text = "Currently Selected: None";
+            }
+            else
+            {
+                _selectedCreature = CreatureType.Plant;
+                CurrentlySelected.text = "Currently Selected: Plant";
+            }
         }
     }
 }
