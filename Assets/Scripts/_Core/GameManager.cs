@@ -1,7 +1,7 @@
 using Ui;
 using UnityEngine;
 
-namespace GameLogic
+namespace _Core
 {
     public class GameManager : MonoBehaviour
     {

@@ -1,8 +1,8 @@
-using Unity.VisualScripting;
+using _Core;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-namespace GameLogic
+namespace LivingObjects.Herbivore.GameLogic
 {
     public class Herbivore : LivingBody
     {
@@ -10,7 +10,7 @@ namespace GameLogic
         {
             base.Update();
 
-            if (HungerLevel > hungerLimitToDeath)
+            if (HungerLevel > HungerLimitToDeath)
             {
                 var gameManager = GameManager.Instance(out var isNull);
                 if (isNull)
@@ -75,7 +75,7 @@ namespace GameLogic
                     return;
                 }
                 
-                if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > hungerLimitToLookForFood)
+                if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > HungerLimitToLookForFood)
                 {
                     ReturnWanderTimer = Time.time;
                     state = State.ChasingFood;
