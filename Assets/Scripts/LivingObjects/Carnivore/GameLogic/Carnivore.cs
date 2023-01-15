@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using _Core;
+using UnityEngine;
 
-namespace GameLogic
+namespace LivingObjects.Carnivore.GameLogic
 {
     public class Carnivore : LivingBody
     {
@@ -8,7 +9,7 @@ namespace GameLogic
         {
             base.Update();
 
-            if (HungerLevel > hungerLimitToDeath)
+            if (HungerLevel > HungerLimitToDeath)
             {
                 var gameManager = GameManager.Instance(out var isNull);
                 if (isNull)

@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 using Random=UnityEngine.Random;
 
 
-namespace GameLogic
+namespace LivingObjects
 {
     public class LivingBody : MonoBehaviour
     {
@@ -27,10 +26,10 @@ namespace GameLogic
         protected State state = State.Wandering;
         protected float ReturnWanderTimer;
         
-        [SerializeField] protected float speed = 10;
-        [SerializeField] protected float detectionRad = 10.0f;
-        [SerializeField] protected float hungerLimitToLookForFood = 0.0f;
-        [SerializeField] protected float hungerLimitToDeath = Mathf.Infinity;
+        [SerializeField] protected float Speed = 10;
+        [SerializeField] protected float DetectionRad = 10.0f;
+        [SerializeField] protected float HungerLimitToLookForFood = 0.0f;
+        [SerializeField] protected float HungerLimitToDeath = Mathf.Infinity;
 
         protected virtual void Start()
         {
@@ -38,7 +37,7 @@ namespace GameLogic
             _wanderingDirChangeTimer = Time.deltaTime;
             ReturnWanderTimer = Time.deltaTime;
 
-            _baseSpeed = speed;
+            _baseSpeed = Speed;
         }
 
         protected virtual void Update()
@@ -61,13 +60,13 @@ namespace GameLogic
 
         protected virtual void FixedUpdate()
         {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (speed * Time.deltaTime));
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(_moveDir)* speed) ,Color.blue);
+            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (Speed * Time.deltaTime));
+            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(_moveDir)* Speed) ,Color.blue);
         }
 
         protected virtual void Wandering(ref Vector3 direction)
         {
-            speed = _baseSpeed;
+            Speed = _baseSpeed;
             var currentTime = Time.time;
             if (currentTime - _wanderingDirChangeTimer > 4)
             {
@@ -89,7 +88,7 @@ namespace GameLogic
         // this will change the state based on surroundings
         protected virtual void CheckSurroundings()
         {
-            RangeCollider = Physics.OverlapSphere(transform.position, detectionRad);
+            RangeCollider = Physics.OverlapSphere(transform.position, DetectionRad);
         }
 
     }

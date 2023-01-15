@@ -1,6 +1,7 @@
+using _Core;
 using UnityEngine;
 
-namespace GameLogic
+namespace LivingObjects.Plant.GameLogic
 {
     public class Plant : MonoBehaviour
     {
