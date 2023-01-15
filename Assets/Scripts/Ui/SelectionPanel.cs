@@ -10,7 +10,7 @@ namespace Ui
 
         public void UpdateSelection(CreatureType type)
         {
-            CurrentlySelected.text = type.ToString();
+            CurrentlySelected.text = "Selected: " + type;
         }
     }
 }
