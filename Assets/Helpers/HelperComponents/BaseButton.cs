@@ -43,7 +43,7 @@ namespace Helpers.HelperComponents
                 return;
             }
             ClickAction.Invoke();
-            //todo: add sound
+            //todo: add sounds
         }
     }
 }
