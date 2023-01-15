@@ -574,8 +574,8 @@ MonoBehaviour:
   ClickAction:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1134797847}
-        m_TargetAssemblyTypeName: Ui.SelectionPanel, Assembly-CSharp
+      - m_Target: {fileID: 1753263121}
+        m_TargetAssemblyTypeName: _Core.ObjectSpawner, Assembly-CSharp
         m_MethodName: SelectPlant
         m_Mode: 1
         m_Arguments:
@@ -1041,6 +1041,7 @@ MonoBehaviour:
   HerbivoreCount: {fileID: 1391529356}
   CarnivoreCount: {fileID: 209121417}
   PlantCount: {fileID: 109007164}
+  selectionPanel: {fileID: 1134797847}
 --- !u!1 &759130580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,8 +1172,8 @@ MonoBehaviour:
   ClickAction:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1134797847}
-        m_TargetAssemblyTypeName: Ui.SelectionPanel, Assembly-CSharp
+      - m_Target: {fileID: 1753263121}
+        m_TargetAssemblyTypeName: _Core.ObjectSpawner, Assembly-CSharp
         m_MethodName: SelectHerbivore
         m_Mode: 1
         m_Arguments:
@@ -1277,8 +1278,8 @@ MonoBehaviour:
   ClickAction:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1134797847}
-        m_TargetAssemblyTypeName: Ui.SelectionPanel, Assembly-CSharp
+      - m_Target: {fileID: 1753263121}
+        m_TargetAssemblyTypeName: _Core.ObjectSpawner, Assembly-CSharp
         m_MethodName: SelectCarnivore
         m_Mode: 1
         m_Arguments:

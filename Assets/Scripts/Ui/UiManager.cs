@@ -1,3 +1,4 @@
+using Models.Enums;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Ui
         [SerializeField] private TextMeshProUGUI HerbivoreCount;
         [SerializeField] private TextMeshProUGUI CarnivoreCount;
         [SerializeField] private TextMeshProUGUI PlantCount;
+        [SerializeField] private SelectionPanel selectionPanel;
 
         public void UpdateHerbivoreCount(int count)
         {
@@ -22,6 +24,11 @@ namespace Ui
         public void UpdatePlantCount(int count)
         {
             PlantCount.text = "Plant Count: " + count;
+        }
+
+        public void UpdateSelectedTypeText(CreatureType type)
+        {
+            selectionPanel.UpdateSelection(type);
         }
     }
 }

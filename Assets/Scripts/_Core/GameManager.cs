@@ -6,7 +6,7 @@ namespace _Core
     public class GameManager : MonoBehaviour
     {
         private static GameManager _instance;
-        
+
         public UiManager UiManager;
         public ObjectSpawner ObjectSpawner;
 
@@ -17,6 +17,7 @@ namespace _Core
                 isNull = true;
                 return null;
             }
+
             isNull = false;
             return _instance;
         }
