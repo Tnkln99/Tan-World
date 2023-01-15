@@ -9,13 +9,13 @@ namespace GameLogic
     {
         protected enum State
         {
-            Wondering,
+            Wandering,
             ChasingFood,
             RunningAway
         }
         
         private Rigidbody _rb;
-        private float _wonderingDirChangeTimer;
+        private float _wanderingDirChangeTimer;
         private Vector3 _moveDir;
         private float _baseSpeed;
         
@@ -24,8 +24,8 @@ namespace GameLogic
         protected Collider[] RangeCollider;
         protected bool HasAggro = false;
         protected double HungerLevel = 0;
-        protected State state = State.Wondering;
-        protected float ReturnWonderTimer;
+        protected State state = State.Wandering;
+        protected float ReturnWanderTimer;
         
         [SerializeField] protected float speed = 10;
         [SerializeField] protected float detectionRad = 10.0f;
@@ -35,8 +35,8 @@ namespace GameLogic
         protected virtual void Start()
         {
             _rb = GetComponent<Rigidbody>();
-            _wonderingDirChangeTimer = Time.deltaTime;
-            ReturnWonderTimer = Time.deltaTime;
+            _wanderingDirChangeTimer = Time.deltaTime;
+            ReturnWanderTimer = Time.deltaTime;
 
             _baseSpeed = speed;
         }
@@ -44,10 +44,10 @@ namespace GameLogic
         protected virtual void Update()
         {
             CheckSurroundings();
-            HungerLevel = HungerLevel + 0.002;
+            HungerLevel += 0.002;
             switch (state)
             {
-                case State.Wondering:
+                case State.Wandering:
                     Wandering(ref _moveDir);
                     break;
                 case State.ChasingFood:
@@ -69,10 +69,10 @@ namespace GameLogic
         {
             speed = _baseSpeed;
             var currentTime = Time.time;
-            if (currentTime - _wonderingDirChangeTimer > 4)
+            if (currentTime - _wanderingDirChangeTimer > 4)
             {
                 direction = new Vector3(Random.Range(-1f, 1f), 0.0f,Random.Range(-1f, 1f));
-                _wonderingDirChangeTimer = currentTime;
+                _wanderingDirChangeTimer = currentTime;
             }
         }
 
