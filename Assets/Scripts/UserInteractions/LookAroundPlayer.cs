@@ -10,7 +10,7 @@ namespace UserInteractions
         //Drag the camera object here
         public Camera Cam;
         public float zoomLevel;
-        public float sensitivity = 1;
+        public float sensitivity = 1.2f;
         public float speed = 30;
         public float maxZoom = 30;
         float zoomPosition;
@@ -33,28 +33,24 @@ namespace UserInteractions
 
         private void OnMouseOver()
         {
-            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            if (Input.GetAxis("Mouse ScrollWheel") != 0)
             {
                 var transform1 = transform;
                 var position = transform1.position;
 
-                zoomPosition = Mathf.MoveTowards(zoomPosition, zoomLevel, speed * Time.deltaTime);
                 zoomLevel += Input.mouseScrollDelta.y * sensitivity;
                 zoomLevel = Mathf.Clamp(zoomLevel, 0, maxZoom);
                 zoomPosition = Mathf.MoveTowards(zoomPosition, zoomLevel, speed * Time.deltaTime);
-                transform1.position = position + (transform1.forward * zoomPosition);
-            }
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-            {
-                var transform1 = transform;
-                var position = transform1.position;
-
-                zoomPosition = Mathf.MoveTowards(zoomPosition, zoomLevel, speed * Time.deltaTime);
-                zoomLevel += Input.mouseScrollDelta.y * sensitivity;
-                zoomLevel = Mathf.Clamp(zoomLevel, 0, maxZoom);
-                zoomPosition = Mathf.MoveTowards(zoomPosition, zoomLevel, speed * Time.deltaTime);
-                transform1.position = position - (transform1.forward * zoomPosition);
+                if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                {
+                    transform1.position = position + (transform1.forward * zoomPosition);
+                }
+                else
+                {
+                    transform1.position = position - (transform1.forward * zoomPosition);
+                }
             }
         }
+        
     }
 }
