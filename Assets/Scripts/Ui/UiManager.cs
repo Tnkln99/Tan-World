@@ -13,12 +13,12 @@ namespace Ui
         {
             HerbivoreCount.text = "Herbivore Count: " + count;
         }
-        
+
         public void UpdateCarnivoreCount(int count)
         {
             CarnivoreCount.text = "Carnivore Count: " + count;
         }
-    
+
         public void UpdatePlantCount(int count)
         {
             PlantCount.text = "Plant Count: " + count;
