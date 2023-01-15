@@ -60,7 +60,7 @@ namespace GameLogic
                 }
             }
 
-            state = State.Wondering;
+            state = State.Wandering;
             HasAggro = false;
         }
     }

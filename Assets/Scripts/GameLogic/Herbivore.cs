@@ -26,10 +26,10 @@ namespace GameLogic
             base.ChasingFood(ref direction);
             
             var currentTime = Time.time;
-            if (currentTime - ReturnWonderTimer > 10)
+            if (currentTime - ReturnWanderTimer > 10)
             {
-                ReturnWonderTimer = currentTime;
-                state = State.Wondering;
+                ReturnWanderTimer = currentTime;
+                state = State.Wandering;
                 HasAggro = false;
             }
             
@@ -77,7 +77,7 @@ namespace GameLogic
                 
                 if (unit.gameObject.CompareTag("Plant") && !HasAggro && HungerLevel > hungerLimitToLookForFood)
                 {
-                    ReturnWonderTimer = Time.time;
+                    ReturnWanderTimer = Time.time;
                     state = State.ChasingFood;
                     EatTarget = unit.gameObject.transform;
                     HasAggro = true;
