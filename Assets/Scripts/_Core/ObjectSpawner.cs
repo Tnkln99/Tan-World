@@ -4,6 +4,7 @@ using Gravity;
 using Helpers.ObjectPool;
 using Models.Enums;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
 
 
 namespace _Core
@@ -93,6 +94,15 @@ namespace _Core
                     newPlant.transform.SetParent(Planet.transform, false);
                     newPlant.GetComponent<GravityBody>().Planet = Planet.GetComponent<GravityAttracter>();
                     newPlant.transform.position = hitData.point;
+
+                    var body = newPlant.transform;
+                    var gravityUp = (body.position - transform.position).normalized;
+                    var bodyUp = body.up;
+                    
+                    var targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * body.rotation;
+                    
+                    body.rotation = targetRotation;
+                    
                     gameManager.UiManager.UpdatePlantCount(_countPlants);
                 }
             }
