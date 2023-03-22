@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HerbivoreAttributes
   m_EditorClassIdentifier: 
   Speed: 2
-  DetectionRad: 30
+  DetectionRad: 3
   HungerLimitToLookForFood: 0
   HungerLimitToDeath: 999999

@@ -6,80 +6,51 @@ using Random=UnityEngine.Random;
 namespace LivingObjects
 {
     public class LivingBody : MonoBehaviour
-    {
-        protected enum State
-        {
-            Wandering,
-            ChasingFood,
-            RunningAway
-        }
+    { 
         
         private Rigidbody _rb;
-        private float _wanderingDirChangeTimer;
-        private Vector3 _moveDir;
         private float _baseSpeed;
         
-        protected Transform EatTarget;
-        protected Transform RunAwayTarget;
+        protected Vector3 Velocity;
+        protected Vector3 Accel;
         protected Collider[] RangeCollider;
-        protected bool HasAggro = false;
-        protected double HungerLevel;
-        protected State state = State.Wandering;
-        protected float ReturnWanderTimer;
+        protected float CurrentHungerLevel = 0;
         [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
 
         protected virtual void Start()
         {
             _rb = GetComponent<Rigidbody>();
-            _wanderingDirChangeTimer = Time.deltaTime;
-            ReturnWanderTimer = Time.deltaTime;
 
             _baseSpeed = LivingBodyAttributes.Speed;
+
+            Velocity = new Vector3(Random.Range(-1f, 1f), 0.0f, Random.Range(-1f, 1f)).normalized;
+            Accel = Vector3.zero;
         }
 
         protected virtual void Update()
         {
             CheckSurroundings();
-            HungerLevel += 0.002;
-            switch (state)
-            {
-                case State.Wandering:
-                    Wandering(ref _moveDir);
-                    break;
-                case State.ChasingFood:
-                    ChasingFood(ref _moveDir);
-                    break;
-                case State.RunningAway:
-                    RunningAway(ref _moveDir);
-                    break;
-            }
+            CurrentHungerLevel += 0.0f; // todo..
+
+            Velocity += Accel;
+            Velocity = Velocity.normalized;
+            Vector3.ClampMagnitude(Velocity, _baseSpeed);
+            Accel = Vector3.zero;
+        }
+
+        // for debugging
+        private void OnDrawGizmosSelected()
+        {
+            // Debug to see the detection radious
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.DetectionRad);
+
+            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Velocity) * LivingBodyAttributes.Speed), Color.blue);
         }
 
         protected virtual void FixedUpdate()
         {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(_moveDir) * (LivingBodyAttributes.Speed * Time.deltaTime));
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(_moveDir) * LivingBodyAttributes.Speed), Color.blue);
-        }
-
-        protected virtual void Wandering(ref Vector3 direction)
-        {
-            LivingBodyAttributes.Speed = _baseSpeed;
-            var currentTime = Time.time;
-            if (currentTime - _wanderingDirChangeTimer > 4)
-            {
-                direction = new Vector3(Random.Range(-1f, 1f), 0.0f,Random.Range(-1f, 1f));
-                _wanderingDirChangeTimer = currentTime;
-            }
-        }
-
-        protected virtual void ChasingFood(ref Vector3 direction)
-        {
-            
-        }
-
-        protected virtual void RunningAway(ref Vector3 direction)
-        {
-            
+            _rb.MovePosition(_rb.position + transform.TransformDirection(Velocity) * (LivingBodyAttributes.Speed * Time.deltaTime));
         }
         
         // this will change the state based on surroundings
