@@ -11,7 +11,7 @@ namespace LivingObjects
         private Rigidbody _rb;
         private float _baseSpeed;
         
-        protected Vector3 Velocity;
+        protected Vector3 moveDir;
         protected Vector3 Accel;
         protected Collider[] RangeCollider;
         protected float CurrentHungerLevel = 0;
@@ -23,7 +23,7 @@ namespace LivingObjects
 
             _baseSpeed = LivingBodyAttributes.Speed;
 
-            Velocity = new Vector3(Random.Range(-1f, 1f), 0.0f, Random.Range(-1f, 1f)).normalized;
+            moveDir = new Vector3(Random.Range(-1f, 1f), 0.0f, Random.Range(-1f, 1f)).normalized;
             Accel = Vector3.zero;
         }
 
@@ -32,10 +32,15 @@ namespace LivingObjects
             CheckSurroundings();
             CurrentHungerLevel += 0.0f; // todo..
 
-            Velocity += Accel;
-            Velocity = Velocity.normalized;
-            Vector3.ClampMagnitude(Velocity, _baseSpeed);
+            moveDir += Accel;
+            moveDir = moveDir.normalized;
+            Vector3.ClampMagnitude(moveDir, _baseSpeed);
             Accel = Vector3.zero;
+        }
+
+        protected virtual void FixedUpdate()
+        {
+            _rb.MovePosition(_rb.position + transform.TransformDirection(moveDir) * (LivingBodyAttributes.Speed * Time.deltaTime));
         }
 
         // for debugging
@@ -45,15 +50,9 @@ namespace LivingObjects
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.DetectionRad);
 
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Velocity) * LivingBodyAttributes.Speed), Color.blue);
+            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(moveDir) * LivingBodyAttributes.Speed), Color.blue);
         }
-
-        protected virtual void FixedUpdate()
-        {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(Velocity) * (LivingBodyAttributes.Speed * Time.deltaTime));
-        }
-        
-        // this will change the state based on surroundings
+           
         protected virtual void CheckSurroundings()
         {
             RangeCollider = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);

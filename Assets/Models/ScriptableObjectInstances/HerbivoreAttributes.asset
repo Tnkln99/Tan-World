@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed8c5cbba564d5f9d854ffecc6b95a1, type: 3}
   m_Name: HerbivoreAttributes
   m_EditorClassIdentifier: 
-  Speed: 2
-  DetectionRad: 3
+  Speed: 5
+  DetectionRad: 10
   HungerLimitToLookForFood: 0
   HungerLimitToDeath: 999999
