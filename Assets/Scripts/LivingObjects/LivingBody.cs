@@ -34,7 +34,6 @@ namespace LivingObjects
 
             moveDir += Accel;
             moveDir = moveDir.normalized;
-            Vector3.ClampMagnitude(moveDir, _baseSpeed);
             Accel = Vector3.zero;
         }
 

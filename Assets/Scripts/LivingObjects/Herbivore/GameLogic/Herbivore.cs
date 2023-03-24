@@ -26,7 +26,7 @@ namespace LivingObjects.Herbivore.GameLogic
                 gameManager.ObjectSpawner.DestroyHerbivore(gameObject);
             }
 
-            Accel += _cohesionVector + _seperationVector + _alignementVector;
+            Accel += new Vector3(_cohesionVector.x, 0.0f, _cohesionVector.z) + new Vector3(_seperationVector.x, 0.0f, _seperationVector.z) + new Vector3(_alignementVector.x, 0.0f, _alignementVector.z);
         }
 
         protected override void CheckSurroundings()
@@ -44,10 +44,10 @@ namespace LivingObjects.Herbivore.GameLogic
                 {
                     numberOfHerbivoreDetected++;
                     Vector3 posHerb = unit.transform.position;
-                    herbivorePositionSum += new Vector3(posHerb.x, 0.0f, posHerb.z);
+                    herbivorePositionSum += posHerb;
                     herbivoreVelocitySum += unit.gameObject.GetComponent<Rigidbody>().velocity;
 
-                    if(Vector3.Magnitude(transform.position - posHerb) < LivingBodyAttributes.DetectionRad / 2)
+                    if(Vector3.Magnitude(transform.position - posHerb) < LivingBodyAttributes.DetectionRad)
                     {
                         Vector3 difference = transform.position - posHerb;
                         seperation = difference - seperation;
@@ -63,6 +63,11 @@ namespace LivingObjects.Herbivore.GameLogic
                 _cohesionVector = herbivorePositionSum / numberOfHerbivoreDetected;
                 _seperationVector = seperation;
                 _alignementVector = herbivoreVelocitySum / numberOfHerbivoreDetected;
+
+                // trying things..
+                _cohesionVector /= 10;
+                _seperationVector /= 5;
+                _alignementVector /= 3;
             }
         }   
     }
