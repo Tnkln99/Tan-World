@@ -6,7 +6,8 @@ namespace Models.ScriptableObjectModels
     public class LivingBodyAttributes : ScriptableObject
     {
         public float Speed;
-        public float DetectionRad;
+        public float LocalAreaRadious;
+        public float SeparationRadious;
         public float HungerLimitToLookForFood;
         public float HungerLimitToDeath;
         public float SteeringSpeed;

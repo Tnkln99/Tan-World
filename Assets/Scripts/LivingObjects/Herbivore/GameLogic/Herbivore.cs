@@ -2,6 +2,7 @@ using _Core;
 using System;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UIElements;
 using Vector3 = UnityEngine.Vector3;
 
@@ -24,40 +25,50 @@ namespace LivingObjects.Herbivore.GameLogic
             }
         }
 
-        protected override void CheckSurroundingsCalculateMovement()
+        protected override void CheckSurroundingsCalculateSteering()
         {
-            base.CheckSurroundingsCalculateMovement();
+            base.CheckSurroundingsCalculateSteering();
             Steering = Vector3.zero;
 
             int separationCount = 0;
             int alignmentCount = 0;
             int cohesionCount = 0;
 
-            float noClumpingRadius = LivingBodyAttributes.DetectionRad / 4;
+            float noClumpingRadius = LivingBodyAttributes.SeparationRadious;
 
             Vector3 seperation = Vector3.zero;
             Vector3 alignement = Vector3.zero;
             Vector3 cohesion = Vector3.zero;
 
-            foreach (var herbivore in LivingThingsAround)
+            var leaderBoid = Surroundings[0];
+            var leaderAngle = 180f;
+
+            foreach (var unit in Surroundings)
             {
-                if (herbivore.CompareTag("Herbivore") && !GameObject.ReferenceEquals(herbivore.gameObject, this.gameObject)) 
+                if (unit.CompareTag("Herbivore") && !GameObject.ReferenceEquals(unit.gameObject, this.gameObject)) 
                 {
-                    Vector3 posHerb = herbivore.transform.position;
+                    Vector3 posHerb = unit.transform.position;
                     
                     if(Vector3.Magnitude(transform.position - posHerb) < noClumpingRadius)
                     {
-                        seperation += herbivore.transform.position - transform.position;
+                        seperation += unit.transform.position - transform.position;
                         separationCount++;
                     }
 
                     alignement += transform.forward;
                     alignmentCount++;
 
-                    cohesion += herbivore.transform.position - transform.position;
+                    cohesion += unit.transform.position - transform.position;
                     cohesionCount++;
 
-                    Debug.DrawLine(transform.position, herbivore.transform.position);
+                    var angle = Vector3.Angle(unit.transform.position - transform.position, transform.forward);
+                    if (angle < leaderAngle && angle < 90f)
+                    {
+                        leaderBoid = unit;
+                        leaderAngle = angle;
+                    }
+
+                    Debug.DrawLine(transform.position, unit.transform.position);
                 }   
             }
 
@@ -68,7 +79,10 @@ namespace LivingObjects.Herbivore.GameLogic
                 seperation /= separationCount;
             }
 
-            if(alignmentCount > 0)
+            //flip and normalize
+            seperation = -seperation;
+
+            if (alignmentCount > 0)
             {
                 alignement /= alignmentCount;
             }
@@ -78,16 +92,18 @@ namespace LivingObjects.Herbivore.GameLogic
                 cohesion /= cohesionCount;
             }
 
-            //flip and normalize
-            seperation = -seperation;
-
             //get direction to center of mass
             cohesion -= transform.position;
 
             //weighted rules
-            Steering += new Vector3(seperation.x, 0.0f, seperation.z).normalized;
-            Steering += new Vector3(alignement.x, 0.0f, alignement.z).normalized;
-            Steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized;
+            Steering += new Vector3(seperation.x, 0.0f, seperation.z).normalized * 0.5f;
+            Steering += new Vector3(alignement.x, 0.0f, alignement.z).normalized * 0.34f;
+            Steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized * 0.16f;
+
+            if (leaderBoid != null)
+            {
+                Steering += (leaderBoid.transform.position - transform.position).normalized * 0.5f;
+            }
         }
     }
 }

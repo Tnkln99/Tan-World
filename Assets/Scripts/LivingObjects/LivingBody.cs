@@ -11,7 +11,7 @@ namespace LivingObjects
         private Rigidbody _rb;
         
         protected Vector3 Steering;
-        protected Collider[] LivingThingsAround;
+        protected Collider[] Surroundings;
         protected float CurrentHungerLevel = 0;
         [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
 
@@ -24,7 +24,7 @@ namespace LivingObjects
 
         protected virtual void Update()
         {
-            CheckSurroundingsCalculateMovement();
+            CheckSurroundingsCalculateSteering();
             CurrentHungerLevel += 0.0f; // todo..
         }
 
@@ -35,14 +35,13 @@ namespace LivingObjects
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Steering), LivingBodyAttributes.SteeringSpeed * Time.deltaTime);
             }
-            
             //move 
             transform.position += transform.TransformDirection(new Vector3(0, 0, LivingBodyAttributes.Speed)) * Time.deltaTime;
         }
            
-        protected virtual void CheckSurroundingsCalculateMovement()
+        protected virtual void CheckSurroundingsCalculateSteering()
         {
-            LivingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
+            Surroundings = Physics.OverlapSphere(transform.position, LivingBodyAttributes.LocalAreaRadious);
         }
 
         // for debugging
@@ -50,7 +49,7 @@ namespace LivingObjects
         {
             // Debug to see the detection radious
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.DetectionRad);
+            Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.LocalAreaRadious);
 
             Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
         }

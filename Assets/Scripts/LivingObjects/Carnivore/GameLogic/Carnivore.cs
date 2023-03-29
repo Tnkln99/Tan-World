@@ -20,11 +20,11 @@ namespace LivingObjects.Carnivore.GameLogic
             }
         }
         
-        protected override void CheckSurroundingsCalculateMovement()
+        protected override void CheckSurroundingsCalculateSteering()
         {
-            base.CheckSurroundingsCalculateMovement();
+            base.CheckSurroundingsCalculateSteering();
             
-            foreach (var unit in LivingThingsAround)
+            foreach (var unit in Surroundings)
             {
                
             }
