@@ -11,7 +11,7 @@ namespace LivingObjects
         private Rigidbody _rb;
         
         protected Vector3 Steering;
-        protected Collider[] RangeCollider;
+        protected Collider[] LivingThingsAround;
         protected float CurrentHungerLevel = 0;
         [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
 
@@ -32,10 +32,17 @@ namespace LivingObjects
         {
             //apply steering
             if (Steering != Vector3.zero)
+            {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Steering), LivingBodyAttributes.SteeringSpeed * Time.deltaTime);
-
+            }
+            
             //move 
             transform.position += transform.TransformDirection(new Vector3(0, 0, LivingBodyAttributes.Speed)) * Time.deltaTime;
+        }
+           
+        protected virtual void CheckSurroundingsCalculateMovement()
+        {
+            LivingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
         }
 
         // for debugging
@@ -47,11 +54,5 @@ namespace LivingObjects
 
             Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
         }
-           
-        protected virtual void CheckSurroundingsCalculateMovement()
-        {
-            RangeCollider = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
-        }
-
     }
 }

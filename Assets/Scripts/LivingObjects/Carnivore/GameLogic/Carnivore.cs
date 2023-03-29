@@ -24,7 +24,7 @@ namespace LivingObjects.Carnivore.GameLogic
         {
             base.CheckSurroundingsCalculateMovement();
             
-            foreach (var unit in RangeCollider)
+            foreach (var unit in LivingThingsAround)
             {
                
             }

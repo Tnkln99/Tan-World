@@ -39,25 +39,25 @@ namespace LivingObjects.Herbivore.GameLogic
             Vector3 alignement = Vector3.zero;
             Vector3 cohesion = Vector3.zero;
 
-            foreach (var unit in RangeCollider)
+            foreach (var herbivore in LivingThingsAround)
             {
-                if (unit.CompareTag("Herbivore") && !GameObject.ReferenceEquals(unit.gameObject, this.gameObject)) 
+                if (herbivore.CompareTag("Herbivore") && !GameObject.ReferenceEquals(herbivore.gameObject, this.gameObject)) 
                 {
-                    Vector3 posHerb = unit.transform.position;
+                    Vector3 posHerb = herbivore.transform.position;
                     
                     if(Vector3.Magnitude(transform.position - posHerb) < noClumpingRadius)
                     {
-                        seperation += unit.transform.position - transform.position;
+                        seperation += herbivore.transform.position - transform.position;
                         separationCount++;
                     }
 
                     alignement += transform.forward;
                     alignmentCount++;
 
-                    cohesion += unit.transform.position - transform.position;
+                    cohesion += herbivore.transform.position - transform.position;
                     cohesionCount++;
 
-                    Debug.DrawLine(transform.position, unit.transform.position);
+                    Debug.DrawLine(transform.position, herbivore.transform.position);
                 }   
             }
 
@@ -85,9 +85,9 @@ namespace LivingObjects.Herbivore.GameLogic
             cohesion -= transform.position;
 
             //weighted rules
-            Steering += seperation.normalized;
-            Steering += alignement.normalized;
-            Steering += cohesion.normalized;
+            Steering += new Vector3(seperation.x, 0.0f, seperation.z).normalized;
+            Steering += new Vector3(alignement.x, 0.0f, alignement.z).normalized;
+            Steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized;
         }
     }
 }
