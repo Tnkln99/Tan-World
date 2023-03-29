@@ -1,4 +1,6 @@
 using _Core;
+using System;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vector3 = UnityEngine.Vector3;
@@ -7,12 +9,7 @@ namespace LivingObjects.Herbivore.GameLogic
 {
     public class Herbivore : LivingBody
     {
-
-        private Vector3 _cohesionVector = new Vector3(0,0,0);
-        private Vector3 _seperationVector = new Vector3(0,0,0);
-        private Vector3 _alignementVector = new Vector3(0,0,0);
-
-        protected override void Update() 
+        protected override void Update()
         {
             base.Update();
 
@@ -25,51 +22,73 @@ namespace LivingObjects.Herbivore.GameLogic
                 }
                 gameManager.ObjectSpawner.DestroyHerbivore(gameObject);
             }
-
-            Accel += new Vector3(_cohesionVector.x, 0.0f, _cohesionVector.z) + new Vector3(_seperationVector.x, 0.0f, _seperationVector.z) + new Vector3(_alignementVector.x, 0.0f, _alignementVector.z);
         }
 
-        protected override void CheckSurroundings()
+        protected override void CheckSurroundingsCalculateMovement()
         {
-            base.CheckSurroundings();
+            base.CheckSurroundingsCalculateMovement();
+            Steering = Vector3.zero;
 
-            int numberOfHerbivoreDetected = 0;
-            Vector3 herbivorePositionSum = new Vector3 (0,0,0);
-            Vector3 seperation = new Vector3 (0,0,0);
-            Vector3 herbivoreVelocitySum = new Vector3 (0,0,0);
+            int separationCount = 0;
+            int alignmentCount = 0;
+            int cohesionCount = 0;
+
+            float noClumpingRadius = LivingBodyAttributes.DetectionRad / 4;
+
+            Vector3 seperation = Vector3.zero;
+            Vector3 alignement = Vector3.zero;
+            Vector3 cohesion = Vector3.zero;
 
             foreach (var unit in RangeCollider)
             {
                 if (unit.CompareTag("Herbivore") && !GameObject.ReferenceEquals(unit.gameObject, this.gameObject)) 
                 {
-                    numberOfHerbivoreDetected++;
                     Vector3 posHerb = unit.transform.position;
-                    herbivorePositionSum += posHerb;
-                    herbivoreVelocitySum += unit.gameObject.GetComponent<Rigidbody>().velocity;
-
-                    if(Vector3.Magnitude(transform.position - posHerb) < LivingBodyAttributes.DetectionRad)
+                    
+                    if(Vector3.Magnitude(transform.position - posHerb) < noClumpingRadius)
                     {
-                        Vector3 difference = transform.position - posHerb;
-                        seperation = difference - seperation;
+                        seperation += unit.transform.position - transform.position;
+                        separationCount++;
                     }
+
+                    alignement += transform.forward;
+                    alignmentCount++;
+
+                    cohesion += unit.transform.position - transform.position;
+                    cohesionCount++;
 
                     Debug.DrawLine(transform.position, unit.transform.position);
                 }   
             }
 
 
-            if (numberOfHerbivoreDetected > 0)
+            //calculate average
+            if (separationCount > 0)
             {
-                _cohesionVector = herbivorePositionSum / numberOfHerbivoreDetected;
-                _seperationVector = seperation;
-                _alignementVector = herbivoreVelocitySum / numberOfHerbivoreDetected;
-
-                // trying things..
-                _cohesionVector /= 10;
-                _seperationVector /= 5;
-                _alignementVector /= 3;
+                seperation /= separationCount;
             }
-        }   
+
+            if(alignmentCount > 0)
+            {
+                alignement /= alignmentCount;
+            }
+
+            if (cohesionCount > 0) 
+            { 
+                cohesion /= cohesionCount;
+            }
+
+            //flip and normalize
+            seperation = -seperation;
+
+            //get direction to center of mass
+            cohesion -= transform.position;
+
+            //weighted rules
+            Steering += seperation.normalized;
+            Steering += alignement.normalized;
+            Steering += cohesion.normalized;
+        }
     }
 }
 

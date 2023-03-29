@@ -9,5 +9,6 @@ namespace Models.ScriptableObjectModels
         public float DetectionRad;
         public float HungerLimitToLookForFood;
         public float HungerLimitToDeath;
+        public float SteeringSpeed;
     }
 }

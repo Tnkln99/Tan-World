@@ -16,3 +16,4 @@ MonoBehaviour:
   DetectionRad: 10
   HungerLimitToLookForFood: 0
   HungerLimitToDeath: 999999
+  SteeringSpeed: 100

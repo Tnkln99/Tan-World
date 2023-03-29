@@ -1,4 +1,5 @@
 using Models.ScriptableObjectModels;
+using System;
 using UnityEngine;
 using Random=UnityEngine.Random;
 
@@ -6,13 +7,10 @@ using Random=UnityEngine.Random;
 namespace LivingObjects
 {
     public class LivingBody : MonoBehaviour
-    { 
-        
+    {
         private Rigidbody _rb;
-        private float _baseSpeed;
         
-        protected Vector3 moveDir;
-        protected Vector3 Accel;
+        protected Vector3 Steering;
         protected Collider[] RangeCollider;
         protected float CurrentHungerLevel = 0;
         [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
@@ -21,25 +19,23 @@ namespace LivingObjects
         {
             _rb = GetComponent<Rigidbody>();
 
-            _baseSpeed = LivingBodyAttributes.Speed;
-
-            moveDir = new Vector3(Random.Range(-1f, 1f), 0.0f, Random.Range(-1f, 1f)).normalized;
-            Accel = Vector3.zero;
+            Steering = Vector3.zero;
         }
 
         protected virtual void Update()
         {
-            CheckSurroundings();
+            CheckSurroundingsCalculateMovement();
             CurrentHungerLevel += 0.0f; // todo..
-
-            moveDir += Accel;
-            moveDir = moveDir.normalized;
-            Accel = Vector3.zero;
         }
 
         protected virtual void FixedUpdate()
         {
-            _rb.MovePosition(_rb.position + transform.TransformDirection(moveDir) * (LivingBodyAttributes.Speed * Time.deltaTime));
+            //apply steering
+            if (Steering != Vector3.zero)
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Steering), LivingBodyAttributes.SteeringSpeed * Time.deltaTime);
+
+            //move 
+            transform.position += transform.TransformDirection(new Vector3(0, 0, LivingBodyAttributes.Speed)) * Time.deltaTime;
         }
 
         // for debugging
@@ -49,10 +45,10 @@ namespace LivingObjects
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.DetectionRad);
 
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(moveDir) * LivingBodyAttributes.Speed), Color.blue);
+            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
         }
            
-        protected virtual void CheckSurroundings()
+        protected virtual void CheckSurroundingsCalculateMovement()
         {
             RangeCollider = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
         }
