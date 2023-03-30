@@ -9,7 +9,7 @@ namespace LivingObjects.Carnivore.GameLogic
         {
             base.Update();
 
-            if (CurrentHungerLevel > LivingBodyAttributes.HungerLimitToDeath)
+            if (currentHungerLevel > LivingBodyAttributes.HungerLimitToDeath)
             {
                 var gameManager = GameManager.Instance(out var isNull);
                 if (isNull)
@@ -20,11 +20,11 @@ namespace LivingObjects.Carnivore.GameLogic
             }
         }
         
-        protected override void CheckSurroundingsCalculateSteering()
+        protected override void CheckSurroundingsCalculateMovement()
         {
-            base.CheckSurroundingsCalculateSteering();
+            base.CheckSurroundingsCalculateMovement();
             
-            foreach (var unit in Surroundings)
+            foreach (var unit in livingThingsAround)
             {
                
             }

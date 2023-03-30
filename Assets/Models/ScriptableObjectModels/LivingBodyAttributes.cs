@@ -11,5 +11,6 @@ namespace Models.ScriptableObjectModels
         public float HungerLimitToLookForFood;
         public float HungerLimitToDeath;
         public float SteeringSpeed;
+        public bool MakesFlock;
     }
 }
