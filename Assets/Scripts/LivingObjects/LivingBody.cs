@@ -51,7 +51,7 @@ namespace LivingObjects
            
         protected virtual void CheckSurroundingsCalculateMovement()
         {
-            livingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
+            livingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.LocalAreaRadious);
             if (!LivingBodyAttributes.MakesFlock)
             {
                 return;
@@ -62,7 +62,7 @@ namespace LivingObjects
             int alignmentCount = 0;
             int cohesionCount = 0;
 
-            float noClumpingRadius = LivingBodyAttributes.DetectionRad / 4;
+            float noClumpingRadius = LivingBodyAttributes.SeparationRadious;
 
             Vector3 separation = Vector3.zero;
             Vector3 alignment = Vector3.zero;
@@ -134,7 +134,7 @@ namespace LivingObjects
             var transform1 = transform;
             var pos = transform1.position;
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(pos, LivingBodyAttributes.DetectionRad);
+            Gizmos.DrawWireSphere(pos, LivingBodyAttributes.LocalAreaRadious);
             Debug.DrawLine(pos, (_rb.position + transform1.TransformDirection(_steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
         }
     }
