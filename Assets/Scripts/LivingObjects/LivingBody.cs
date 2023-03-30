@@ -1,6 +1,8 @@
 using _Core;
 using Models.ScriptableObjectModels;
+using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 
 namespace LivingObjects
@@ -67,6 +69,10 @@ namespace LivingObjects
             Vector3 separation = Vector3.zero;
             Vector3 alignment = Vector3.zero;
             Vector3 cohesion = Vector3.zero;
+            Vector3 leaderPos = Vector3.zero;
+
+            var leaderBoid = livingThingsAround[0];
+            var leaderAngle = 180f;
 
             foreach (var herbivore in livingThingsAround)
             {
@@ -87,6 +93,13 @@ namespace LivingObjects
                     var position = transform1.position;
                     cohesion += herbivore.transform.position - position;
                     cohesionCount++;
+
+                    var angle = Vector3.Angle(posHerb - transform.position, transform.forward);
+                    if (angle < leaderAngle && angle < 90f)
+                    {
+                        leaderBoid = herbivore;
+                        leaderAngle = angle;
+                    }
 
                     Debug.DrawLine(position, posHerb);
                 }   
@@ -109,6 +122,11 @@ namespace LivingObjects
                 cohesion /= cohesionCount;
             }
 
+            if (leaderBoid != null)
+            {
+                leaderPos = leaderBoid.transform.position - transform.position;
+            }
+           
             //flip and normalize
             separation = -separation;
 
@@ -116,15 +134,16 @@ namespace LivingObjects
             cohesion -= transform.position;
 
             
-            SetSteering(separation, alignment, cohesion);
+            SetSteering(separation, alignment, cohesion, leaderPos);
         }
 
-        public void SetSteering(Vector3 separation, Vector3 alignment, Vector3 cohesion)
+        public void SetSteering(Vector3 separation, Vector3 alignment, Vector3 cohesion, Vector3 leaderPos)
         {
             //weighted rules
-            _steering += new Vector3(separation.x, 0.0f, separation.z).normalized;
-            _steering += new Vector3(alignment.x, 0.0f, alignment.z).normalized;
-            _steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized;
+            _steering += new Vector3(separation.x, 0.0f, separation.z).normalized * 0.7f;
+            _steering += new Vector3(alignment.x, 0.0f, alignment.z).normalized * 0.34f;
+            _steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized * 0.16f;
+            _steering += leaderPos.normalized * 0.5f;
         }
 
         // for debugging
