@@ -17,3 +17,4 @@ MonoBehaviour:
   HungerLimitToLookForFood: 0
   HungerLimitToDeath: 999999
   SteeringSpeed: 500
+  MakesFlock: 1

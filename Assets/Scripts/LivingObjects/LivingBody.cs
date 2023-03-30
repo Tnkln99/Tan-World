@@ -1,7 +1,6 @@
+using _Core;
 using Models.ScriptableObjectModels;
-using System;
 using UnityEngine;
-using Random=UnityEngine.Random;
 
 
 namespace LivingObjects
@@ -9,50 +8,134 @@ namespace LivingObjects
     public class LivingBody : MonoBehaviour
     {
         private Rigidbody _rb;
-        
-        protected Vector3 Steering;
-        protected Collider[] LivingThingsAround;
-        protected float CurrentHungerLevel = 0;
+        private Vector3 _steering;
+        private bool _isGameManagerSet;
+        protected Collider[] livingThingsAround;
+        protected float currentHungerLevel = 0;
+        protected GameManager gameManager;
         [SerializeField] protected LivingBodyAttributes LivingBodyAttributes;
-
         protected virtual void Start()
         {
             _rb = GetComponent<Rigidbody>();
-
-            Steering = Vector3.zero;
+            _steering = Vector3.zero;
         }
 
         protected virtual void Update()
         {
+            if (!_isGameManagerSet)
+            {
+                gameManager = GameManager.Instance(out var isNull);
+                if (isNull)
+                {
+                    return;
+                }
+
+                _isGameManagerSet = true;
+            }
             CheckSurroundingsCalculateMovement();
-            CurrentHungerLevel += 0.0f; // todo..
+            currentHungerLevel += 0.0f; // todo..
         }
 
         protected virtual void FixedUpdate()
         {
+            var transform1 = transform;
             //apply steering
-            if (Steering != Vector3.zero)
+            if (_steering != Vector3.zero)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Steering), LivingBodyAttributes.SteeringSpeed * Time.deltaTime);
+                transform1.rotation = Quaternion.RotateTowards(transform1.rotation, Quaternion.LookRotation(_steering), LivingBodyAttributes.SteeringSpeed * Time.deltaTime);
             }
             
             //move 
-            transform.position += transform.TransformDirection(new Vector3(0, 0, LivingBodyAttributes.Speed)) * Time.deltaTime;
+            transform1.position += transform.TransformDirection(new Vector3(0, 0, LivingBodyAttributes.Speed)) * Time.deltaTime;
         }
            
         protected virtual void CheckSurroundingsCalculateMovement()
         {
-            LivingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
+            livingThingsAround = Physics.OverlapSphere(transform.position, LivingBodyAttributes.DetectionRad);
+            if (!LivingBodyAttributes.MakesFlock)
+            {
+                return;
+            }
+            _steering = Vector3.zero;
+
+            int separationCount = 0;
+            int alignmentCount = 0;
+            int cohesionCount = 0;
+
+            float noClumpingRadius = LivingBodyAttributes.DetectionRad / 4;
+
+            Vector3 separation = Vector3.zero;
+            Vector3 alignment = Vector3.zero;
+            Vector3 cohesion = Vector3.zero;
+
+            foreach (var herbivore in livingThingsAround)
+            {
+                if (herbivore.CompareTag(tag) && !ReferenceEquals(herbivore.gameObject, gameObject)) 
+                {
+                    Vector3 posHerb = herbivore.transform.position;
+                    
+                    if(Vector3.Magnitude(transform.position - posHerb) < noClumpingRadius)
+                    {
+                        separation += herbivore.transform.position - transform.position;
+                        separationCount++;
+                    }
+
+                    var transform1 = transform;
+                    alignment += transform1.forward;
+                    alignmentCount++;
+
+                    var position = transform1.position;
+                    cohesion += herbivore.transform.position - position;
+                    cohesionCount++;
+
+                    Debug.DrawLine(position, posHerb);
+                }   
+            }
+
+
+            //calculate average
+            if (separationCount > 0)
+            {
+                separation /= separationCount;
+            }
+
+            if(alignmentCount > 0)
+            {
+                alignment /= alignmentCount;
+            }
+
+            if (cohesionCount > 0) 
+            { 
+                cohesion /= cohesionCount;
+            }
+
+            //flip and normalize
+            separation = -separation;
+
+            //get direction to center of mass
+            cohesion -= transform.position;
+
+            
+            SetSteering(separation, alignment, cohesion);
+        }
+
+        public void SetSteering(Vector3 separation, Vector3 alignment, Vector3 cohesion)
+        {
+            //weighted rules
+            _steering += new Vector3(separation.x, 0.0f, separation.z).normalized;
+            _steering += new Vector3(alignment.x, 0.0f, alignment.z).normalized;
+            _steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized;
         }
 
         // for debugging
         private void OnDrawGizmosSelected()
         {
             // Debug to see the detection radious
+            var transform1 = transform;
+            var pos = transform1.position;
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, LivingBodyAttributes.DetectionRad);
-
-            Debug.DrawLine(transform.position, (_rb.position + transform.TransformDirection(Steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
+            Gizmos.DrawWireSphere(pos, LivingBodyAttributes.DetectionRad);
+            Debug.DrawLine(pos, (_rb.position + transform1.TransformDirection(_steering.normalized) * LivingBodyAttributes.Speed), Color.blue);
         }
     }
 }
