@@ -154,16 +154,17 @@ namespace _Core
             {
                 return;
             }
+            gameManager.HabitatCreator.isCreatingHabitat = false;
 
             if (_selectedCreature == CreatureType.Herbivore)
             {
                 _selectedCreature = CreatureType.Empty;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty.ToString());
             }
             else
             {
                 _selectedCreature = CreatureType.Herbivore;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Herbivore);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Herbivore.ToString());
             }
         }
 
@@ -174,16 +175,17 @@ namespace _Core
             {
                 return;
             }
+            gameManager.HabitatCreator.isCreatingHabitat = false;
 
             if (_selectedCreature == CreatureType.Carnivore)
             {
                 _selectedCreature = CreatureType.Empty;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty.ToString());
             }
             else
             {
                 _selectedCreature = CreatureType.Carnivore;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Carnivore);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Carnivore.ToString());
             }
         }
 
@@ -195,16 +197,17 @@ namespace _Core
             {
                 return;
             }
+            gameManager.HabitatCreator.isCreatingHabitat = false;
 
             if (_selectedCreature == CreatureType.Plant)
             {
                 _selectedCreature = CreatureType.Empty;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Empty.ToString());
             }
             else
             {
                 _selectedCreature = CreatureType.Plant;
-                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Plant);
+                gameManager.UiManager.UpdateSelectedTypeText(CreatureType.Plant.ToString());
             }
         }
     }

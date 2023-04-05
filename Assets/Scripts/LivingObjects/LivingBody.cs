@@ -141,8 +141,8 @@ namespace LivingObjects
         {
             //weighted rules
             _steering += new Vector3(separation.x, 0.0f, separation.z).normalized * 0.7f;
-            _steering += new Vector3(alignment.x, 0.0f, alignment.z).normalized * 0.34f;
-            _steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized * 0.16f;
+            _steering += new Vector3(alignment.x, 0.0f, alignment.z).normalized * 0.3f;
+            _steering += new Vector3(cohesion.x, 0.0f, cohesion.z).normalized * 0.36f;
             _steering += leaderPos.normalized * 0.5f;
         }
 

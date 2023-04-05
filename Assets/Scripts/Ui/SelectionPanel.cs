@@ -8,7 +8,7 @@ namespace Ui
     {
         [SerializeField] private TextMeshProUGUI CurrentlySelected;
 
-        public void UpdateSelection(CreatureType type)
+        public void UpdateSelection(string type)
         {
             CurrentlySelected.text = "Selected: " + type;
         }

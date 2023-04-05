@@ -17,6 +17,12 @@ namespace UserInteractions
 
         private void OnMouseOver()
         {
+            var gameManager = GameManager.Instance(out var isNull);
+            if (isNull)
+            {
+                return;
+            }
+            if (gameManager.HabitatCreator.isCreatingHabitat) { return; }
             if (Input.GetAxis("Mouse ScrollWheel") != 0)
             {
                 var transform1 = transform;
@@ -43,6 +49,7 @@ namespace UserInteractions
             {
                 return;
             }
+            if (gameManager.HabitatCreator.isCreatingHabitat) { return; }
 
             var rotX = Input.GetAxis("Mouse X") * RotationSpeed;
             var rotY = Input.GetAxis("Mouse Y") * RotationSpeed;

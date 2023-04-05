@@ -26,7 +26,7 @@ namespace Ui
             PlantCount.text = "Plant Count: " + count;
         }
 
-        public void UpdateSelectedTypeText(CreatureType type)
+        public void UpdateSelectedTypeText(string type)
         {
             selectionPanel.UpdateSelection(type);
         }

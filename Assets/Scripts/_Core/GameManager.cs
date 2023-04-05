@@ -9,6 +9,7 @@ namespace _Core
         public Camera MainCamera;
         public UiManager UiManager;
         public ObjectSpawner ObjectSpawner;
+        public HabitatCreator HabitatCreator;
 
         public static GameManager Instance(out bool isNull)
         {
